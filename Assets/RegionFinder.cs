@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,21 +7,27 @@ public class RegionFinder : MonoBehaviour
     // Start is called before the first frame update
     public Canvas myCanvas;
     private GameObject goal = null;
+    public GameObject lastChildObject;
+    List<GameObject> regionList = new List<GameObject>();
+
     void Start()
     {
-     
+        ListGen(transform);
+        regionList.Reverse();
     }
 
-void Update()
+    void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Search(transform);
-            if (goal != null)
-                goal.GetComponent<Image>().color = Random.ColorHSV();
-            else
-                Debug.LogWarning("Error");
-            goal = null;
+            foreach (GameObject region in regionList)
+            {
+                if (IsCursorInsideRegion(region))
+                {
+                    region.GetComponent<Image>().color = Random.ColorHSV();
+                    break;
+                }
+            }
         }
     }
     private bool IsCursorInsideRegion(GameObject region)
@@ -32,17 +39,14 @@ void Update()
         else
             return false;
     }
-    private void Search(Transform parentTransform)
-    {   
+
+    private void ListGen(Transform parentTransform)
+    {
         for (int i = 0; i < parentTransform.childCount; i++)
         {
             var nextChild = parentTransform.GetChild(i);
-            if (IsCursorInsideRegion(nextChild.gameObject))
-            {
-                goal = nextChild.gameObject;
-            }
-            Search(nextChild);
+            regionList.Add(nextChild.gameObject);
+            ListGen(nextChild);
         }
-        
     }
 }
