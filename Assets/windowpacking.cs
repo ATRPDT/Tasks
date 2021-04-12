@@ -87,7 +87,7 @@ public class windowpacking : MonoBehaviour
             if (count == n) break;
             for (int j = 0; j < config.y + 1; j++)
             {
-                if(count == n) break;
+                //if(count == n) break;
                 GUIDrawRectangle(leftUpCorner.x + j * (w + minSpacing), leftUpCorner.y - i * ( h + minSpacing), w, h);
                 count++;
             }
